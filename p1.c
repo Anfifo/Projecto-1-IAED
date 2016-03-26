@@ -3,6 +3,9 @@
 #define MAX_AIRPORTS 1000
 #define MAX_FLIGHTS_PER_AIRPORT 1000
 #define CODE_SIZE 3
+#define SMALLER -1
+#define GREATER 0
+#define EQUAL 1
 
 
 /* types */
@@ -40,28 +43,32 @@ void copy_codes(char target[], char code[])
 	target[i+1] = '\0';
 }
 
+int code_to_index(char code[])
+{
+	int i;
+	int character;
+	
+	for (i = 0; i < next_airport_index; i++)
+	{
+		if ((character = compare_codes(airports[i].code, code)) == 1)
+			return airports[i].index;	
+	}
+	return -1;
+}
+
 int compare_codes(char code1[], char code2[])
 {
 	int i;
 
 	for( i = 0; i < CODE_SIZE; i++)
 	{
-		if (code1[i] != code2[i])
-			return 0;
+		if (code1[i] < code2[i])
+			return SMALLER;
+			
+		if else (code1[i] > code2[i])
+			return GREATER;
 	}
-	return 1;
-}
-
-int code_to_index(char code[])
-{
-	int i;
-	for (i = 0; i < next_airport_index; i++)
-	{
-		if (compare_codes(airports[i].code, code))
-			return airports[i].index;
-	}
-	return -1;
-}
+	return EQUAL;
 
 
 /* type functions */
@@ -255,15 +262,97 @@ void open_airport(char code[])
 	airports[index].state = 0;
 }
 
-
+void print_index_order()
+{
+	int i;
+	int out;
+	int in;
 	
+	for (i = 0; i < next_airport_index; i++)
+	{
+		out = airport_flight_count_out(i);
+		in = airport_flight_count_in(i);
+		
+		printf("%s:%d:%d:%d\n", 
+				airports[i].code, 
+				airports[i].capacity, 
+				out, 
+				in);
+	}
+}
+
+void sort_alphabetical(int array[])
+{
+	int i, j;
+	int array[];
+	int value;
+	
+	for ( i = 0; i < next_airport_index; i++)
+	{	
+		for ( j = i+1; j < next_airport_index; j++)
+		{	
+			array[j] = j;
+				
+			if ((value = compare_codes(airports[i].code, airports[k].code) == GREATER)) 
+				array[i] = j;
+			else 
+				array[i] = i;
+		}
+	}
+}
+			
 	
 
-
-
+void print_alphabetical_order()
+{
+	int i;
+	int array[next_airport_index];
 	
+	sort_alphabetical(array);
+	
+	for (i = 0; i < next_airport_index; i++)
+	{
+		out = airport_flight_count_out(array[i]);
+		in = airport_flight_count_in(array[i]);
+		
+		printf("%s:%d:%d:%d\n", 
+				airports[array[i]].code, 
+				airports[array[i]].capacity, 
+				out, 
+				in);
+	}
+}
 
+void print_histogram()
+{
+	int i;
+	int j;
+	int count_out;
+	int count_in;
+	int array[MAX_FLIGHTS_PER_AIRPORT];
+	
+	for (i = 0; i < next_airport_index; i++)
+	{
+		count_out = airport_flight_count_out(airports[i].index);
+		count_in = airport_flight_count_in(airports[i].index);
+		array[count_in+count_out]++;
+	}
+	
+	i = 0;
+	j = 0;
+	
+	while (i < next_airport_index) /*born to be while*/
+	{
+		if (array[j] != 0)
+		{
+			printf("%d:%d\n", j, array[j]);
+			i++;
+		}
+		
+		j++;
+	}
 
+}
 
 
 int menu()
@@ -272,6 +361,7 @@ int menu()
 	int index = 0;
 	int index1 = 0;
 	int index2 = 0;
+	int inst;
 	int capa;
 	int new_capa = 0;
 	char c;
@@ -401,6 +491,22 @@ int menu()
 			case 'L':
 			
 				puts("print list");
+				scanf(" %d", &inst);
+				
+				if (inst = 0)
+				{
+					print_index_order();
+				}
+				
+				else if (inst = 1)
+				{
+					print_alphabetical_order();
+				}
+				
+				else if (inst = 2)
+				{
+					print_histogram();
+				}
 				
 				break;
 				
