@@ -2,19 +2,24 @@
 
 #define MAX_AIRPORTS 1000
 #define MAX_FLIGHTS_PER_AIRPORT 1000
-#define CODE_SIZE 3
+#define CODE_SIZE 4
+
 #define SMALLER -1
 #define GREATER 0
 #define EQUAL 1
+
 #define OPEN 1
 #define CLOSED 0
+
+#define SUCCESS 1
+#define ERROR -1
 
 /*  == == == == == == == ==
 	= Types and variables =
 	== == == == == == == ==*/
 typedef struct
 {
-	char code [10];
+	char code [CODE_SIZE];
 	int capacity; /*has to be > 0*/
 	int state; //on - 1; off - 2//
 	int index;
@@ -199,8 +204,12 @@ int flight_count(flight fl)
 	return airSpace[fl.out][fl.in];	
 }
 
+
+
+/* airports */
+
 int airport_flight_count_out(int index)
-{
+{ /* returns the number of outcoming flights at index's airport*/
 	int count = 0;
 	int i;
 
@@ -211,7 +220,7 @@ int airport_flight_count_out(int index)
 }
 
 int airport_flight_count_in(int index)
-{
+{ /* returns the number of incoming flights at index's aiport */
 	int count = 0;
 	int i;
 	
@@ -224,7 +233,7 @@ int airport_flight_count_in(int index)
 
 
 int airport_connection_count(int index)
-{
+{ /* returns the number of connected airports to index's airport */ 
 	int count = 0;
 	int i;
 	
@@ -237,8 +246,11 @@ int airport_connection_count(int index)
 	return count;
 }
 
+
+
+/* general */
 int most_flights()
-{
+{ /* returns the airport's index with most flights */
 	int index;
 	int count = 0;
 	int max = 0;
@@ -259,7 +271,7 @@ int most_flights()
 }
 
 int most_connections()
-{
+{ /* returns the airport's index with most connections */
 	int index;
 	int count = 0;
 	int max = 0;
@@ -277,12 +289,10 @@ int most_connections()
 	}
 	return max_index;
 }
-	
+
 flight most_popular_flight()
-{
-	int out = 0;
-	int in = 0;
-	int max = 0;
+{ /* returns the most popular flight */
+	int out = 0, in = 0, max = 0;
 	flight max_flight;
 	
 	for (out = 0; out < nr_of_airports; out++)
@@ -300,9 +310,8 @@ flight most_popular_flight()
 	return max_flight;
 }
 
-void close_airport(char code[])
-{
-	int index = code_to_index(code);
+int close_airport(int index)
+{ /* closes index's airport */
 	int i;
 	
 	for (i = 0; i < nr_of_airports; i++)
@@ -311,16 +320,20 @@ void close_airport(char code[])
 		airSpace[i][index]=0;
 	}
 	
-	airports[index].state = 0;
+	change_airport_state(airports[index], CLOSED);
+	return SUCCESS;
 }
 
 
-void open_airport(char code[])
-{
-	int index = code_to_index(code);	
+void open_airport(int index)
+{ /* OPENS de airport of a certain index */
 	change_airport_state (airports[index], OPEN);
 }
 
+
+
+
+/* Related to command L*/
 void print_index_order()
 {
 	int i, in, out;
@@ -328,7 +341,7 @@ void print_index_order()
 	for (i = 0; i < nr_of_airports; i++)
 	{
 		out = airport_flight_count_out(i);
-		in = airport_flight_count_in(i);
+		in = airport_flight_cocunt_in(i);
 		
 		printf("%s:%d:%d:%d\n", 
 				airports[i].code, 
@@ -534,19 +547,24 @@ void command_V()
 void command_C()
 { /* closes an airport */
 	char code[CODE_SIZE];
+	int index;
 
 	puts("close airport");
 	scanf("%s", code);
-	close_airport(code);	
+	
+	index = code_to_index(code);
+	close_airport(index);	
 }
 
 void command_O()
 { /* opens an airport */
 	char code [CODE_SIZE];
-
+	int index;
 	puts("open airport");
 	scanf("%s", code);
-	open_airport(code);	
+	
+	index = code_to_index(code);
+	open_airport(index);	
 }
 
 void command_L()
@@ -643,4 +661,3 @@ int main()
 	return 0;
 }
 
-/*for xico*/
