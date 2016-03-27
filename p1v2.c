@@ -1,12 +1,24 @@
+/* 
+== = = = = = = = = = = ==
+= /////// tg034 /////// =
+== = = = = = = = = = = ==
+=  84698 Andre Fonseca	=
+=  84726 Isabel Dias	=
+== = = = = = = = = = = ==
+=  1o Projecto de IAED	=
+=   LEIC-T 2015-2016	=
+== = = = = = = = = = = == 
+*/
+
 #include <stdio.h>
 
 #define MAX_AIRPORTS 1000
 #define MAX_FLIGHTS_PER_AIRPORT 1000
 #define CODE_SIZE 4
 
-#define SMALLER -1
-#define GREATER 0
 #define EQUAL 1
+#define GREATER 0
+#define SMALLER -1
 
 #define OPEN 1
 #define CLOSED 0
@@ -172,7 +184,8 @@ void modify_capacity(char code[], int new_capa)
 /* flights */
 
 void add_round_trip(flight fl)
-{
+{/* adds 2 flights one incoming and
+	one outgoing to both airports */
 	airSpace[fl.out][fl.in]++;
 	airSpace[fl.in][fl.out]++;
 	
@@ -180,7 +193,8 @@ void add_round_trip(flight fl)
 }
 
 void remove_round_trip(flight fl)
-{
+{/* removes 2 flights one incoming and
+	one outgoing to both aiports */
 	airSpace[fl.out][fl.in]--;
 	airSpace[fl.in][fl.out]--;
 	
