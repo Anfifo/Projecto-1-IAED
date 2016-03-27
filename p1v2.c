@@ -173,10 +173,8 @@ void add_airport(char code[], int capa)
 }
 
 
-void modify_capacity(char code[], int new_capa)
-{
-	int index = code_to_index(code);
-	
+void modify_capacity(int index, int new_capa)
+{	
 	change_airport_capacity(airports[index], new_capa);
 }
 
@@ -224,22 +222,19 @@ int flight_count(flight fl)
 
 int airport_flight_count_out(int index)
 { /* returns the number of outcoming flights at index's airport*/
-	int count = 0;
-	int i;
+	int i, count = 0;
 
 	for(i = 0; i < nr_of_airports; i++)
-	
 		count += airSpace[index][i];	
+
 	return count;
 }
 
 int airport_flight_count_in(int index)
 { /* returns the number of incoming flights at index's aiport */
-	int count = 0;
-	int i;
+	int i, count = 0;
 	
 	for(i = 0; i < nr_of_airports; i++)
-	
 		count += airSpace[i][index];	
 	
 	return count;
@@ -248,15 +243,12 @@ int airport_flight_count_in(int index)
 
 int airport_connection_count(int index)
 { /* returns the number of connected airports to index's airport */ 
-	int count = 0;
-	int i;
+	int i, count = 0;
 	
 	for (i = 0; i < nr_of_airports; i++)
-	{
 		if (airSpace[index][i] > 0 || airSpace[i][index] > 0)
 			count++;
-	}
-	
+
 	return count;
 }
 
@@ -324,14 +316,15 @@ flight most_popular_flight()
 	return max_flight;
 }
 
+
 int close_airport(int index)
 { /* closes index's airport */
 	int i;
 	
 	for (i = 0; i < nr_of_airports; i++)
 	{
-		airSpace[index][i]=0;
-		airSpace[i][index]=0;
+		airSpace[index][i] = 0;
+		airSpace[i][index] = 0;
 	}
 	
 	change_airport_state(airports[index], CLOSED);
@@ -355,7 +348,7 @@ void print_index_order()
 	for (i = 0; i < nr_of_airports; i++)
 	{
 		out = airport_flight_count_out(i);
-		in = airport_flight_cocunt_in(i);
+		in = airport_flight_count_in(i);
 		
 		printf("%s:%d:%d:%d\n", 
 				airports[i].code, 
@@ -452,11 +445,12 @@ void command_A()
 void command_I()
 { /* changes an airport's capacity*/
 	char code [CODE_SIZE];
-	int new_capa;
+	int new_capa, index;
 
 	puts("modify airport capacity");
 	scanf("%s %d", code, &new_capa);
-	modify_capacity(code, new_capa);
+	index = code_to_index(code);
+	modify_capacity(index, new_capa);
 }
 
 void command_F()
