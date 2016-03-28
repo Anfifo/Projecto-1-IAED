@@ -94,7 +94,7 @@ int code_to_index(char code[])
 		if ((character = compare_codes(airports[i].code, code)) == 1)
 			return airports[i].index;	
 	}
-	return -1;
+	return ERROR;
 }
 
 
@@ -161,7 +161,7 @@ flight codes_to_flight(char code1[], char code2[])
 	== == == == == == == == */
 
 
-void add_airport(char code[], int capa)
+int add_airport(char code[], int capa)
 {	
 	int index = nr_of_airports;	
 	airport airp;
@@ -170,24 +170,33 @@ void add_airport(char code[], int capa)
 	copy_aiport( airports[index], airp);
 
 	nr_of_airports++;
+	return SUCCESS;
 }
 
 
-void modify_capacity(int index, int new_capa)
-{	
+int  modify_capacity(int index, int new_capa)
+{	/* modifies the capacity of index's airport */
+	if (index == ERROR)
+	{
+		return ERROR;
+	}
+
 	change_airport_capacity(airports[index], new_capa);
+	return SUCCESS;
 }
 
 
 /* flights */
 
-void add_round_trip(flight fl)
+int add_round_trip(flight fl)
 {/* adds 2 flights one incoming and
 	one outgoing to both airports */
 	airSpace[fl.out][fl.in]++;
 	airSpace[fl.in][fl.out]++;
 	
 	total_flight_count += 2;
+
+	return SUCCESS;
 }
 
 void remove_round_trip(flight fl)
@@ -199,10 +208,12 @@ void remove_round_trip(flight fl)
 	total_flight_count -= 2;
 }
 
-void add_flight(flight fl)
+int add_flight(flight fl)
 {
 	airSpace[fl.out][fl.in]++;
 	total_flight_count++;
+
+	return SUCCESS;
 }
 
 void remove_flight(flight fl)
@@ -350,7 +361,7 @@ void print_index_order()
 		out = airport_flight_count_out(i);
 		in = airport_flight_count_in(i);
 		
-		printf("%s:%d:%d:%d\n", 
+		printf("%s:%d:%d:%d\n",
 				airports[i].code, 
 				airports[i].capacity, 
 				out, in);
@@ -598,8 +609,8 @@ int menu()
 	char c;
 
 	while (1)
-	{
-		switch (c = getchar() )
+	{ 
+		switch (c = getchar())
 		{
 			case 'A':
 				command_A();	
