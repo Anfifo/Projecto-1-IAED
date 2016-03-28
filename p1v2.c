@@ -13,11 +13,10 @@
 #include <stdio.h>
 
 #define MAX_AIRPORTS 1000
-#define MAX_FLIGHTS_PER_AIRPORT 1000
 #define CODE_SIZE 4
 
-#define EQUAL 1
-#define GREATER 0
+#define EQUAL 0
+#define GREATER 1
 #define SMALLER -1
 
 #define OPEN 1
@@ -26,14 +25,18 @@
 #define SUCCESS 1
 #define ERROR -1
 
+#define FLIGHT_COUNT(A) (airport_flight_count_out(A) + airport_flight_count_in(A))
+#define CAPACITY_LEFT(A) (airports[A].capacity - (airport_flight_count_out(A) + airport_flight_count_in(A)))
+#define AIRPORT_CLOSED(A) (airports[A].state == CLOSED)
+
 /*  == == == == == == == ==
 	= Types and variables =
-	== == == == == == == ==*/
+	== == == == == == == ==  */
 typedef struct
 {
 	char code [CODE_SIZE];
 	int capacity; /*has to be > 0*/
-	int state; //on - 1; off - 2//
+	int state; /*on - 1; off - 0*/
 	int index;
 }airport;
 
@@ -51,13 +54,57 @@ airport airports[MAX_AIRPORTS];
 int airSpace[MAX_AIRPORTS][MAX_AIRPORTS];
 int nr_of_airports = 0;
 int total_flight_count = 0;
+int max_airport_capacity = 0;
+
+
+
+/* Type Functions */
+flight create_flight (int out, int in);
+flight codes_to_flight(char code1[], char code2[]);
+/* Main Functions */
+int add_airport(char code[], int capa);
+int modify_capacity(int index, int change);
+int add_round_trip(flight fl);
+int remove_round_trip(flight fl);
+int add_flight(flight fl);
+int remove_flight(flight fl);
+int flight_count(flight fl);
+int airport_flight_count_out(int index);
+int airport_flight_count_in(int index);
+int airport_connection_count(int index);
+int most_flights();
+int most_connections();
+flight most_popular_flight();
+int close_airport(int index);
+int open_airport(int index);
+void print_index_order();
+void sort_alphabetical(int array[]);
+void print_alphabetical_order();
+void print_histogram();
+/* Commands */
+void command_A();
+void command_I();
+void command_F();
+void command_G();
+void command_R();
+void command_S();
+void command_N();
+void command_P();
+void command_Q();
+void command_V();
+void command_C();
+void command_O();
+void command_L();
+int menu();
+int main();
+
 
 
 
 
 /*  == == == == == == == == ==
 	=   Auxiliar Functions   =
-	== == == == == == == == ==*/
+	== == == == == == == == ==  */
 
 void copy_codes(char target[], char code[])
 {
@@ -69,16 +116,18 @@ void copy_codes(char target[], char code[])
 
 
 int compare_codes(char code1[], char code2[])
-{
+{ /* compares 2 strings, if they're bigger, smaller or equal */
 	int i;
 
-	for( i = 0; i < CODE_SIZE; i++)
+	while (code2[i] != '\0' && code1[i] != '\0')
 	{
 		if (code1[i] < code2[i])
 			return SMALLER;
 			
 		else if (code1[i] > code2[i])
-			return GREATER;
+			return GREATER;	
+		
+		i++;
 	}
 	return EQUAL;
 }
@@ -87,12 +136,12 @@ int compare_codes(char code1[], char code2[])
 int code_to_index(char code[])
 {
 	int i;
-	int character;
 	
 	for (i = 0; i < nr_of_airports; i++)
 	{
-		if ((character = compare_codes(airports[i].code, code)) == 1)
-			return airports[i].index;	
+		if ((airports[i].index != ERROR) &&
+			(compare_codes(airports[i].code, code) == EQUAL))
+				return airports[i].index;
 	}
 	return ERROR;
 }
@@ -101,42 +150,9 @@ int code_to_index(char code[])
 
 /*  == == == == == == == ==
 	=    Type Functions   =
-	== == == == == == == == */
+	== == == == == == == ==  */
 
 
-/* airport */ 
-
-airport create_airport(char code[], int capa, int index)
-{
-	airport airp;
-	
-	copy_codes(airp.code, code);
-	airp.capacity = capa;
-	airp.state = OPEN;
-	airp.index = index;
-
-	return airp;
-} 
-
-airport change_airport_capacity(airport airp, int new_capa)
-{
-	airp.capacity = new_capa;
-	return airp;
-}
-
-airport change_airport_state(airport airp, int new_state)
-{
-	airp.state = new_state;
-	return airp;
-}
-
-void copy_aiport (airport airp1, airport airp2)
-{
-	airp1.index = airp2.index;
-	airp1.capacity = airp2.capacity;
-	airp1.state = airp2.state;
-	copy_codes(airp1.code, airp2.code);
-}
 
 /* flight */
 flight create_flight (int out, int in)
@@ -164,24 +180,35 @@ flight codes_to_flight(char code1[], char code2[])
 int add_airport(char code[], int capa)
 {	
 	int index = nr_of_airports;	
-	airport airp;
 
-	airp = create_airport(code, capa, index);
-	copy_aiport( airports[index], airp);
+	if (capa <= 0)
+		return ERROR;
+
+	airports[index].capacity = capa;
+	airports[index].state = OPEN;
+	airports[index].index = index;
+	copy_codes(airports[index].code, code);
 
 	nr_of_airports++;
 	return SUCCESS;
 }
 
 
-int  modify_capacity(int index, int new_capa)
+int  modify_capacity(int index, int change)
 {	/* modifies the capacity of index's airport */
-	if (index == ERROR)
+	int old_capacity = airports[index].capacity;
+	int new_capacity = old_capacity + change;
+
+	if (index == ERROR || FLIGHT_COUNT(index) > new_capacity)
 	{
 		return ERROR;
 	}
 
-	change_airport_capacity(airports[index], new_capa);
+	airports[index].capacity = new_capacity;
+
+	if (airports[index].capacity > max_airport_capacity)
+		max_airport_capacity = airports[index].capacity;
+	
 	return SUCCESS;
 }
 
@@ -191,6 +218,15 @@ int  modify_capacity(int index, int new_capa)
 int add_round_trip(flight fl)
 {/* adds 2 flights one incoming and
 	one outgoing to both airports */
+
+	if (fl.out == ERROR ||
+		fl.in == ERROR ||
+		AIRPORT_CLOSED(fl.out) ||
+		AIRPORT_CLOSED(fl.in) ||
+		CAPACITY_LEFT(fl.out) < 2 ||
+		CAPACITY_LEFT(fl.in) < 2)
+		return ERROR;
+
 	airSpace[fl.out][fl.in]++;
 	airSpace[fl.in][fl.out]++;
 	
@@ -199,31 +235,51 @@ int add_round_trip(flight fl)
 	return SUCCESS;
 }
 
-void remove_round_trip(flight fl)
+int remove_round_trip(flight fl)
 {/* removes 2 flights one incoming and
 	one outgoing to both aiports */
+	if (fl.out == ERROR || fl.in == ERROR)
+		return ERROR;
+
 	airSpace[fl.out][fl.in]--;
 	airSpace[fl.in][fl.out]--;
-	
 	total_flight_count -= 2;
+
+	return SUCCESS;
 }
 
 int add_flight(flight fl)
 {
+	if (fl.out == ERROR ||
+		fl.in == ERROR ||
+		AIRPORT_CLOSED(fl.out) ||
+		AIRPORT_CLOSED(fl.in) ||
+		CAPACITY_LEFT(fl.out) < 1 ||
+		CAPACITY_LEFT(fl.in) < 1)
+		return ERROR;
+
 	airSpace[fl.out][fl.in]++;
 	total_flight_count++;
 
 	return SUCCESS;
 }
 
-void remove_flight(flight fl)
+int remove_flight(flight fl)
 {
+	if (fl.out == ERROR || fl.in == ERROR)
+		return ERROR;
+
 	airSpace[fl.out][fl.in]--;
 	total_flight_count--;
+	
+	return SUCCESS;
 }
 
 int flight_count(flight fl)
 {	
+	if (fl.out == ERROR || fl.in == ERROR)
+		return ERROR;
+
 	return airSpace[fl.out][fl.in];	
 }
 
@@ -332,22 +388,29 @@ int close_airport(int index)
 { /* closes index's airport */
 	int i;
 	
+	if (index == ERROR)
+		return ERROR;
+
 	for (i = 0; i < nr_of_airports; i++)
 	{
 		airSpace[index][i] = 0;
 		airSpace[i][index] = 0;
 	}
 	
-	change_airport_state(airports[index], CLOSED);
+	airports[index].state = CLOSED;
 	return SUCCESS;
 }
 
 
-void open_airport(int index)
+int open_airport(int index)
 { /* OPENS de airport of a certain index */
-	change_airport_state (airports[index], OPEN);
-}
 
+	if (index == ERROR) 	
+		return ERROR;
+
+	airports[index].state = OPEN;
+	return SUCCESS;
+}
 
 
 
@@ -412,7 +475,7 @@ void print_histogram()
 	int i, j;
 	int count_out;
 	int count_in;
-	int array[MAX_FLIGHTS_PER_AIRPORT];
+	int array[max_airport_capacity+1];
 	
 	for (i = 0; i < nr_of_airports; i++)
 	{
@@ -424,12 +487,12 @@ void print_histogram()
 	i = 0;
 	j = 0;
 	
-	while (i < nr_of_airports) /*born to be while*/
+	while (i < total_flight_count) /*born to be while*/
 	{
 		if (array[j] != 0)
 		{
 			printf("%d:%d\n", j, array[j]);
-			i++;
+			i += j;
 		}	
 		j++;
 	}
@@ -456,12 +519,15 @@ void command_A()
 void command_I()
 { /* changes an airport's capacity*/
 	char code [CODE_SIZE];
-	int new_capa, index;
+	int new_capacity, index;
 
 	puts("modify airport capacity");
-	scanf("%s %d", code, &new_capa);
+	scanf("%s %d", code, &new_capacity);
 	index = code_to_index(code);
-	modify_capacity(index, new_capa);
+
+	if ( modify_capacity(index, new_capacity) == ERROR)
+		printf("*Capacidade de %s inalterada\n",code);
+		
 }
 
 void command_F()
@@ -471,8 +537,10 @@ void command_F()
 	puts("add round trip");
 	scanf("%s %s", code1, code2);
 
-	flight fl = codes_to_flight(code1, code2);
-	add_round_trip(fl);
+	flight fl = codes_to_flight(code1,code2);
+	
+	if (add_round_trip(fl) == ERROR)
+		printf("*Impossivel adicionar voo RT %s %s\n", code1, code2);
 }
 
 void command_G()
@@ -484,7 +552,9 @@ void command_G()
 	scanf("%s %s", code1, code2);
 	
 	flight fl = codes_to_flight(code1, code2);
-	add_flight(fl);
+
+	if (add_flight(fl) == ERROR)
+		printf("*Impossivel adicionar voo %s %s\n", code1, code2);
 }
 
 void command_R()
@@ -495,7 +565,9 @@ void command_R()
 	scanf("%s %s", code1, code2);
 	
 	flight fl = codes_to_flight(code1, code2);
-	remove_flight(fl);
+
+	if (remove_flight(fl) == ERROR)
+		printf("*Impossivel remover voo %s %s\n", code1, code2);
 }
 
 void command_S()
@@ -506,7 +578,9 @@ void command_S()
 	puts("remove round trip");
 	scanf("%s %s", code1, code2);
 	flight fl = codes_to_flight(code1, code2);
-	remove_round_trip(fl);
+
+	if (remove_round_trip(fl) == ERROR)
+		printf("*Impossivel remover voo RT %s %s\n", code1, code2 );
 }
 
 void command_N()
@@ -519,9 +593,20 @@ void command_N()
 	puts("number of flights");
 	scanf("%s %s", code1, code2);
 	
-	flight fl = codes_to_flight(code1, code2);
-	count = flight_count(fl);
-	printf("%d\n", count);
+	int index1 = code_to_index(code1);
+	int index2 = code_to_index(code2);
+
+	if (index1 != ERROR && index2 != ERROR)
+	{
+		count = flight_count(create_flight(index1, index2));
+		printf("%d\n", count);
+	}
+
+	else if (index1 == ERROR)
+		printf("Aeroporto %s inexistente\n",code1);
+
+	else if (index2 == ERROR)
+		printf("Aeroporto %s indexcistente\n", code2);
 }
 
 void command_P()
@@ -572,7 +657,8 @@ void command_C()
 	scanf("%s", code);
 	
 	index = code_to_index(code);
-	close_airport(index);	
+	if (close_airport(index) == ERROR)
+		printf("*Aeroporto %s inexistente\n", code);	
 }
 
 void command_O()
@@ -583,7 +669,8 @@ void command_O()
 	scanf("%s", code);
 	
 	index = code_to_index(code);
-	open_airport(index);	
+	if (open_airport(index) == ERROR)
+		printf("*Aeroporto %s indexistente\n", code);	
 }
 
 void command_L()
@@ -669,6 +756,13 @@ int menu()
 				printf("%d:%d", total_flight_count, nr_of_airports);
 				return 0;
 				break;
+			
+			case 'W':
+				printf("( ͡° ͜ʖ ͡°)\n");
+				break;
+
+			default:
+				printf("commando nao reconhecido\n");
 		}
 		getchar();
 	}
@@ -676,6 +770,13 @@ int menu()
 
 int main()
 {
+	int i,j;
+	for (i = 0; i < MAX_AIRPORTS; i++)
+	{	
+		for (j = 0; j < MAX_AIRPORTS; j++)
+			airSpace[i][j] = 0;
+		airports[i].index = ERROR;
+	}
 	menu();
 	return 0;
 }
