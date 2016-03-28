@@ -29,7 +29,8 @@
 #define CAPACITY_LEFT(A) (airports[A].capacity - (airport_flight_count_out(A) + airport_flight_count_in(A)))
 #define AIRPORT_CLOSED(A) (airports[A].state == CLOSED)
 
-/*  == == == == == == == ==
+/*  
+	== == == == == == == ==
 	= Types and variables =
 	== == == == == == == ==  */
 typedef struct
@@ -57,8 +58,8 @@ int max_airport_capacity = 0;
 
 
 
-
-/*  == == == == == == == ==
+/*
+	== == == == == == == ==
 	= 	   Prototypes     =
 	== == == == == == == ==  */
 
@@ -66,22 +67,19 @@ int max_airport_capacity = 0;
 
 flight create_flight (int out, int in);
 
-/* ____Airport____ */
+/* ____Airports____ */
 
 int modify_capacity(int index, int change);
 int close_airport(int index);
 int open_airport(int index);
 
 /* ____AirSpace___ */
-
-/* Modifiers */
 int add_airport(char code[], int capa);
 int add_flight(flight fl);
 int remove_flight(flight fl);
 int add_round_trip(flight fl);
 int remove_round_trip(flight fl);
 
-/* Selectors */
 int flight_count(flight fl);
 int airport_flight_count_out(int index);
 int airport_flight_count_in(int index);
@@ -90,7 +88,6 @@ flight most_popular_flight();
 int most_flights();
 int most_connections();
 
-/* Outputs */
 void print_index_order();
 void sort_alphabetical(int array[]);
 void print_alphabetical_order();
@@ -101,7 +98,8 @@ void print_histogram();
 
 
 
-/*  == == == == == == == == ==
+/*  
+	== == == == == == == == ==
 	=   Auxiliar Functions   =
 	== == == == == == == == ==  */
 
@@ -156,7 +154,8 @@ flight codes_to_flight(char code1[], char code2[])
 }
 
 
-/*  == == == == == == == ==
+/*  
+	== == == == == == == ==
 	=  Flight Functions   =
 	== == == == == == == ==  */
 
@@ -170,8 +169,9 @@ flight create_flight (int out, int in)
 
 
 
-/*  == == == == == == == ==
-	= Airports Functions  =
+/*  
+	== == == == == == == ==
+	=  Airports Functions =
 	== == == == == == == ==  */
 
 int open_airport(int index)
@@ -219,7 +219,8 @@ int  modify_capacity(int index, int change)
 }
 
 
-/*  == == == == == == == == ==
+/*  
+	== == == == == == == == ==
 	=   AirSpace Functions   =
 	== == == == == == == == ==  */
 
@@ -244,7 +245,7 @@ int add_airport(char code[], int capa)
 
 
 int add_flight(flight fl)
-{
+{/* adds a flight to airSpace */
 	if (fl.out == ERROR ||
 		fl.in == ERROR ||
 		AIRPORT_CLOSED(fl.out) ||
@@ -260,7 +261,7 @@ int add_flight(flight fl)
 
 
 int remove_flight(flight fl)
-{
+{/* removes a flight from the airSpace */
 	if (fl.out == ERROR || fl.in == ERROR)
 		return ERROR;
 
@@ -285,7 +286,6 @@ int add_round_trip(flight fl)
 
 	airSpace[fl.out][fl.in]++;
 	airSpace[fl.in][fl.out]++;
-	
 	total_flight_count += 2;
 
 	return SUCCESS;
@@ -323,6 +323,9 @@ int airport_flight_count_out(int index)
 { /* returns the number of outcoming flights at index's airport*/
 	int i, count = 0;
 
+	if (index == ERROR)
+		return ERROR;
+
 	for(i = 0; i < nr_of_airports; i++)
 		count += airSpace[index][i];	
 
@@ -333,6 +336,9 @@ int airport_flight_count_out(int index)
 int airport_flight_count_in(int index)
 { /* returns the number of incoming flights at index's aiport */
 	int i, count = 0;
+
+	if (index == ERROR)
+		return ERROR;
 	
 	for(i = 0; i < nr_of_airports; i++)
 		count += airSpace[i][index];	
@@ -344,6 +350,9 @@ int airport_flight_count_in(int index)
 int airport_connection_count(int index)
 { /* returns the number of connected airports to index's airport */ 
 	int i, count = 0;
+
+	if (index == ERROR)
+		return ERROR;
 	
 	for (i = 0; i < nr_of_airports; i++)
 		if (airSpace[index][i] > 0 || airSpace[i][index] > 0)
@@ -420,8 +429,9 @@ flight most_popular_flight()
 
 
 
-/*  == == == == == == == ==
-	=  Output Functions   =
+/*  
+	== == == == == == == ==
+	=   Output Functions  =
 	== == == == == == == ==  */
 
 void print_index_order()
@@ -443,19 +453,16 @@ void print_index_order()
 
 void sort_alphabetical(int array[])
 { /* alters an input array that sorts 
-	the airports alphabetically*/
-	int i, j, value;
+	the airports' indexes alphabetically*/
+	int i, j;
 	
 	for ( i = 0; i < nr_of_airports; i++)
 	{	
+		array[i] = i;
 		for ( j = i+1; j < nr_of_airports; j++)
 		{	
-			array[j] = j;
-				
-			if ((value = compare_codes(airports[i].code, airports[j].code) == GREATER)) 
+			if (compare_codes(airports[i].code, airports[j].code) == GREATER) 
 				array[i] = j;
-			else 
-				array[i] = i;
 		}
 	}
 }
@@ -514,7 +521,8 @@ void print_histogram()
 
 
 
-/*  == == == == == == == ==
+/*
+	== == == == == == == ==
 	=    Main Functions   =
 	== == == == == == == == */
 
@@ -749,7 +757,7 @@ int menu()
 				break;
 
 			default:
-				printf("commando nao reconhecido\n");
+				printf("*commando nao reconhecido\n");
 		}
 		getchar();
 	}
