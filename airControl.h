@@ -12,7 +12,7 @@
 */
 
 /* this header contains all the headers and functions 
-that access mannage or change the airSpace */  
+that access manage or change the airSpace */  
 
 
 #include <stdio.h>
