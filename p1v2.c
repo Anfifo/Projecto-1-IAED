@@ -61,7 +61,7 @@ int max_airport_capacity = 0;
 
 /*
 	== == == == == == == ==
-	= 	   Prototypes     =
+	=      Prototypes     =
 	== == == == == == == ==  */
 
 /* ____Flights____ */
@@ -103,14 +103,15 @@ void print_histogram();
 	== == == == == == == == ==
 	=   Auxiliar Functions   =
 	== == == == == == == == ==  */
-
+/*
 void copy_codes(char target[], char code[])
-{/* copies code to target string */
+{ copies code to target string 
 	int i;
 	for (i = 0; i < CODE_SIZE; i++)
 		target[i] = code [i];
 	target[i+1] = '\0';
 }
+*/
 
 /*
 int compare_codes(char code1[], char code2[])
@@ -217,8 +218,8 @@ int  modify_capacity(int index, int change)
 
 	airports[index].capacity = new_capacity;
 
-	if (airports[index].capacity > max_airport_capacity)
-		max_airport_capacity = airports[index].capacity;
+	if (new_capacity > max_airport_capacity)
+		max_airport_capacity = new_capacity;
 	
 	return SUCCESS;
 }
@@ -242,9 +243,12 @@ int add_airport(char code[], int capa)
 	airports[index].capacity = capa;
 	airports[index].state = OPEN;
 	airports[index].index = index;
-	copy_codes(airports[index].code, code);
+	strcpy(airports[index].code, code);
 
 	nr_of_airports++;
+	if (capa > max_airport_capacity)
+		max_airport_capacity = capa;
+
 	return SUCCESS;
 }
 
@@ -501,32 +505,25 @@ void print_alphabetical_order()
 void print_histogram()
 {/* prints the nr of airports
 	to have the same nr of flights */ 
-	int i, j = 0;
+	int i;
 	int array[max_airport_capacity+1];
-	for ( i = 0; i < max_airport_capacity+1; i++, array[i] = 0);
-	
+	for ( i = 0; i < (max_airport_capacity+1); i++)
+		array[i] = 0;
+
 	/* puts in position array's i position
 	the number of airports with i flights */
 	for (i = 0; i < nr_of_airports; i++)
-	{
 		array[FLIGHT_COUNT(i)]++;
-	}
-	i = 0;
 	
+	i = 0;
 	/* prints the previous array */
 	while (i < total_flight_count) /*born to be while*/
 	{
-		if (array[j] != 0)
-		{
-			printf("%d:%d\n", j, array[j]);
-			i += j;
-		}	
-		j++;
+		if (array[i] != 0)
+			printf("%d:%d\n", i, array[i]);
+		i++;
 	}
 }
-
-
-
 
 
 /*
@@ -699,12 +696,9 @@ void command_L()
 
 int menu()
 {	
-	int i;
-	char c;
-
 	while (1)
 	{ 
-		switch (c = getchar())
+		switch (getchar())
 		{
 			case 'A':
 				command_A();	
@@ -761,10 +755,6 @@ int menu()
 			case 'X':
 				printf("%d:%d\n", total_flight_count, nr_of_airports);
 				return 0;
-				break;
-			
-			case 'W':
-				while (1) { for (i = 0; i < 10; i++, printf("( ͡° ͜ʖ ͡°)")); printf("\n");}
 				break;
 
 			default:
