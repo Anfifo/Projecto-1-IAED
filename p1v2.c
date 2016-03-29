@@ -27,9 +27,13 @@
 #define ERROR -1
 
 #define FLIGHT_COUNT(A) (airport_flight_count_out(A) + airport_flight_count_in(A))
-#define CAPACITY_LEFT(A) (airports[A].capacity - (airport_flight_count_out(A) + airport_flight_count_in(A)))
 #define AIRPORT_CLOSED(A) (airports[A].state == CLOSED)
 #define SWAP(A,B) {A += B; B = A - B; A -= B;}
+
+#define CAPACITY_LEFT(A) (airports[A].capacity - \
+		(airport_flight_count_out(A) + airport_flight_count_in(A)))
+
+
 /*  
 	== == == == == == == ==
 	= Types and variables =
@@ -103,33 +107,7 @@ void print_histogram();
 	== == == == == == == == ==
 	=   Auxiliar Functions   =
 	== == == == == == == == ==  */
-/*
-void copy_codes(char target[], char code[])
-{ copies code to target string 
-	int i;
-	for (i = 0; i < CODE_SIZE; i++)
-		target[i] = code [i];
-	target[i+1] = '\0';
-}
-*/
 
-/*
-int compare_codes(char code1[], char code2[])
-{  compares 2 strings, if they're bigger, smaller or equal 
-	int i;
-	while (code2[i] != '\0' && code1[i] != '\0')
-	{
-		if (code1[i] < code2[i])
-			return SMALLER;
-			
-		else if (code1[i] > code2[i])
-			return GREATER;	
-		
-		i++;
-	}
-	return ;
-}
-*/
 
 int code_to_index(char code[])
 {/* returns the index of an airport
