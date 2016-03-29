@@ -17,12 +17,8 @@
 #define CODE_SIZE 4
 
 #define EQUAL 0
-#define GREATER 1
-#define SMALLER -1
-
 #define OPEN 1
 #define CLOSED 0
-
 #define SUCCESS 1
 #define ERROR -1
 
@@ -117,15 +113,13 @@ int code_to_index(char code[])
 	based on its code/id */
 	int i;
 	for (i = 0; i < nr_of_airports; i++)
-	{
 		if ((airports[i].index != ERROR) &&
 			(strcmp(airports[i].code, code) == EQUAL))
-		{
 				return airports[i].index;
-		}
-	}
+
 	return ERROR;
 }
+
 
 flight codes_to_flight(char code1[], char code2[])
 { /* creates a flight from 2 airport codes */
@@ -142,7 +136,7 @@ flight codes_to_flight(char code1[], char code2[])
 	== == == == == == == ==  */
 
 flight create_flight (int out, int in)
-{
+{/* creates a flight from 2 airport indexes */
 	flight fl;
 	fl.out = out;
 	fl.in = in;
@@ -173,6 +167,7 @@ int close_airport(int index)
 	if (index == ERROR)
 		return ERROR;
 
+	/* removes all flights from and to airport*/
 	for (i = 0; i < nr_of_airports; i++)
 	{
 		total_flight_count -= airSpace[index][i];
@@ -301,7 +296,7 @@ int remove_round_trip(flight fl)
 /* ____SELECTORS____ */
 
 int flight_count(flight fl)
-{	
+{
 	if (fl.out == ERROR || fl.in == ERROR)
 		return ERROR;
 
@@ -394,6 +389,7 @@ int most_connections()
 	return max_index;
 }
 
+
 flight most_popular_flight()
 { /* returns the most popular flight */
 	int out = 0, in = 0, max = 0;
@@ -441,18 +437,14 @@ void sort_alphabetical(int array[])
 	the airports' indexes alphabetically*/
 	int i, j;
 	
+	/* initializes the array in index's order */
 	for (i = 0; i < nr_of_airports; i++)
 		array [i] = i;
 
 	for ( i = 0; i < nr_of_airports; i++)
-	{
 		for ( j = i+1; j < nr_of_airports; j++)
-		{	
 			if (strcmp(airports[array[i]].code, airports[array[j]].code) > 0) 
 				SWAP(array[i], array[j]);
-
-		}
-	}
 }
 			
 	
@@ -586,10 +578,10 @@ void command_N()
 				code1, code2, count1, count2);
 	}
 
-	else if (index1 == ERROR)
+	if (index1 == ERROR)
 		printf("Aeroporto %s inexistente\n",code1);
 
-	else if (index2 == ERROR)
+	if (index2 == ERROR)
 		printf("Aeroporto %s inexistente\n", code2);
 }
 
