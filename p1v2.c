@@ -517,7 +517,7 @@ void print_histogram()
 	
 	i = 0;
 	/* prints the previous array */
-	while (i < total_flight_count) /*born to be while*/
+	while (i < max_airport_capacity+1) /*born to be while*/
 	{
 		if (array[i] != 0)
 			printf("%d:%d\n", i, array[i]);
@@ -647,7 +647,7 @@ void command_V()
 
 	trip = most_popular_flight();
 	count = flight_count(trip);
-	printf("Voo mais popular %s:%s:%d\nc", 
+	printf("Voo mais popular %s:%s:%d\n", 
 			airports[trip.out].code,
 			airports[trip.in].code,
 			count);
@@ -694,7 +694,7 @@ void command_L()
 }
 
 
-int menu()
+void menu()
 {	
 	while (1)
 	{ 
@@ -754,7 +754,7 @@ int menu()
 				
 			case 'X':
 				printf("%d:%d\n", total_flight_count, nr_of_airports);
-				return 0;
+				return;
 				break;
 
 			default:
