@@ -400,17 +400,13 @@ flight most_popular_flight()
 	flight max_flight;
 	
 	for (out = 0; out < nr_of_airports; out++)
-	{
 		for (in = 0; in < nr_of_airports; in++)
-		{
 			if (airSpace[out][in] > max)
 			{		
 				max = flight_count(create_flight(out,in));
 				max_flight.out = out;
 				max_flight.in = in;
 			}	
-		}
-	}
 	return max_flight;
 }
 
@@ -731,7 +727,9 @@ void menu()
 				break;
 				
 			case 'X':
-				printf("%d:%d\n", total_flight_count, nr_of_airports);
+				printf("%d:%d\n", 
+					total_flight_count,
+					nr_of_airports);
 				return;
 				break;
 
