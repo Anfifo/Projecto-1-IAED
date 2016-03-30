@@ -60,9 +60,9 @@ the IDcode more understandable
 typedef struct
 {
 	char IDcode [CODE_SIZE];	/* 3 chars + '\0' 								   */
-	int capacity; 			/* int > 0  (how many flights an airport can have) */
-	int state; 				/* OPEN or CLOSED 								   */
-	int index; 				/* ERROR if undefined 							   */
+	int capacity; 				/* int > 0  (how many flights an airport can have) */
+	int state; 					/* OPEN or CLOSED 								   */
+	int index; 					/* ERROR if undefined 							   */
 }airport;
 
 
@@ -233,6 +233,12 @@ int flight_count(flight fl);
 * :: return: int -- number of flights fl(with same departure-destination)
 */
 
+
+
+
+
+
+/* -- General --*/
 int airport_flight_count_out(int index);
 /*
 * finds and sums all the outgoing flights from airport
@@ -253,7 +259,6 @@ int airport_connection_count(int index);
 * :: argmts: int -- airport's index 
 * :: return: int -- sum of all aiport's connections
 */
-
 
 int most_flights();
 /*
@@ -277,7 +282,7 @@ flight most_popular_flight();
 */
 
 
-/* OUTPUT */
+/*-- OUTPUT --*/
 void print_index_order();
 /*
 * prints airport's IDcode capacity and flight counts (in & out) by index order

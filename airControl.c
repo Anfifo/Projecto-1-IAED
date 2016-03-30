@@ -264,6 +264,15 @@ int flight_count(flight fl)
 }
 
 
+
+
+
+
+
+/*  == == == == == == == == ==
+	=    General Functions   =
+	== == == == == == == == ==  */
+
 int airport_flight_count_out(int index)
 { /* returns the number of outgoing flights at index's airport */
 	int i, count = 0;
@@ -272,7 +281,7 @@ int airport_flight_count_out(int index)
 		return ERROR;
 
 	for(i = 0; i < nr_of_airports; i++)
-		count += airSpace[index][i];	
+		count += flight_count(create_flight(index, i));	
 
 	return count;
 }
@@ -286,7 +295,7 @@ int airport_flight_count_in(int index)
 		return ERROR;
 	
 	for(i = 0; i < nr_of_airports; i++)
-		count += airSpace[i][index];	
+		count += flight_count(create_flight(i, index));	
 	
 	return count;
 }
@@ -300,7 +309,8 @@ int airport_connection_count(int index)
 		return ERROR;
 	
 	for (i = 0; i < nr_of_airports; i++)
-		if (airSpace[index][i] > 0 || airSpace[i][index] > 0)
+		if (flight_count(create_flight(index,i)) > 0 ||
+		 	flight_count(create_flight(i,index)) > 0)
 			count++;
 
 	return count;
