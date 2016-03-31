@@ -16,3 +16,6 @@ andre lets work
 28/05/2016
 today we finished the project. we faced some tough shit but in the end we're still alive. now we're praying mooshak isnt a bitch. yay
  today andre also submited a directory to mooshak. andre is crying. im judging. but all is fine
+
+30/05/2016
+Andre keeps working. I don't get it. 
