@@ -18,4 +18,5 @@ today we finished the project. we faced some tough shit but in the end we're sti
  today andre also submited a directory to mooshak. andre is crying. im judging. but all is fine
 
 30/05/2016
-Andre keeps working. I don't get it. more and more files keep appearing. i don't get it. 
+Andre keeps working. I don't get it. more and more files keep appearing. i don't get it.
+ Isabel workeded rally harde on the comments 'cause my engrish just sucks suh bed
