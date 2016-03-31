@@ -177,13 +177,12 @@ void command_L()
 			print_histogram();
 			break;
 	}
-
 }
 
 
 void menu()
 {	
-	while (1) 	/*born to be while */
+	while (1)
 	{ 
 		switch (getchar())
 		{
