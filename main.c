@@ -11,8 +11,6 @@
 */
 
 #include "main.h"
-#include "airControl.h"
-
 
 
 void command_A()
@@ -242,6 +240,7 @@ void menu()
 				break;
 				
 			case 'X':
+				/* exits program */
 				printf("%d:%d\n", 
 					total_flight_count,
 					nr_of_airports);

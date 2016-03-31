@@ -449,8 +449,13 @@ void print_histogram()
 {/* prints the nr of airports
 	that have the same nr of flights */ 
 	int i;
+	int flights = 0;
+	int sum_of_flights = 0;
+	int airport_count = 0;
 	int array[max_airport_capacity+1];
-	for ( i = 0; i < (max_airport_capacity+1); i++)
+
+	/* initializing array with zeros */
+	for ( i = 0; i < (max_airport_capacity + 1); i++)
 		array[i] = 0;
 
 	/* adds to array's i position the 
@@ -458,8 +463,18 @@ void print_histogram()
 	for (i = 0; i < nr_of_airports; i++)
 		array[AIRPORT_FLIGHT_COUNT(i)]++;
 	
-	/* prints the previous array */
-	for ( i = 0; i < max_airport_capacity+1; i++)
-		if (array[i] != 0)
-			printf("%d:%d\n", i, array[i]);
+	/* prints the previous array, multiplies all flights by two 
+	cause it counts for all flights inc and out for each airport*/
+	while(sum_of_flights < (total_flight_count*2))
+	{	
+		airport_count = array [flights];
+		
+		if (airport_count != 0)
+		{	
+			sum_of_flights += (flights * airport_count);
+			printf("%d:%d\n", flights, airport_count);
+		}
+		flights++;
+	}
+	
 }

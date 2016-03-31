@@ -11,8 +11,14 @@
 == = = = = = = = = = = == 
 */
 
+/*
+NOTE: this code highly relies on using aiport's indexes
+instead of using the structure itself as it is easier
+and more effecient to throw around indexes, so in all
+functions related to airports, they handle their index
 
-/* this header contains all the headers and functions 
+
+this header contains all the headers and functions 
 that access manage or change the airSpace */  
 
 #include <stdio.h>
@@ -31,9 +37,10 @@ that access manage or change the airSpace */
 
 /*-- macro functions --	
 
-we decided to use some macro functions
-to avoid repeating IDcode and to make	
-the IDcode more understandable 
+we decided to use some macro functions to avoid repeating code,
+to make	it more understandable and add more abstraction.
+We understand they could have been implemented as regular functions
+however not much would have been gained from it
 */
 
 
@@ -73,7 +80,8 @@ typedef struct
 	int out;
 	int in;
 }flight;
-
+/* this structure helps keep a layer of abstraction and allows 
+functions to return 2 indexes without having to rely on arrays */
 
 
 
