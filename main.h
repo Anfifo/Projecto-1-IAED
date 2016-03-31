@@ -15,7 +15,7 @@
 #include "air_control.h"
 
 /* this header contains all
- * the function prototypes on main.c 
+ * functions prototypes on main.c 
  * which receive and respond to inputs*/
 
 
