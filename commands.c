@@ -10,12 +10,11 @@
 == = = = = = = = = = = == 
 */
 
-#include "commands.h"
-
+#include "main.h"
 
 
 void command_A()
-{ /* adds an airport to airSpace */
+{ /* adds airport to airSpace */
 	char IDcode [CODE_SIZE];
 	int capacity;
 	scanf("%s %d", IDcode, &capacity);
@@ -24,7 +23,7 @@ void command_A()
 }
 
 void command_I()
-{ /* changes an airport's capacity */
+{ /* changes airport's capacity */
 	char IDcode [CODE_SIZE];
 	int capacity_change;
 	scanf("%s %d", IDcode, &capacity_change);
@@ -46,7 +45,7 @@ void command_F()
 }
 
 void command_G()
-{ /* adds a single flight */ 
+{ /* adds single flight */ 
 	char IDcode1 [CODE_SIZE];
 	char IDcode2 [CODE_SIZE];
 	scanf("%s %s", IDcode1, IDcode2);
@@ -57,7 +56,7 @@ void command_G()
 }
 
 void command_R()
-{ /* removes a single flight */
+{ /* removes single flight */
 	char IDcode1 [CODE_SIZE];
 	char IDcode2 [CODE_SIZE];
 	scanf("%s %s", IDcode1, IDcode2);
@@ -79,8 +78,8 @@ void command_S()
 }
 
 void command_N()
-{ /* prints out the number of flights 
-	 from one airport to another */
+{ /* prints the number of flights 
+	 from airport 1 to airport 2 */
 	char IDcode1 [CODE_SIZE];
 	char IDcode2 [CODE_SIZE];
 	int count1,count2;
@@ -104,7 +103,7 @@ void command_N()
 }
 
 void command_P()
-{ /* prints the airport with most flights */
+{ /* prints airport with most flights */
 	int index = most_flights();
 	
 	printf("Aeroporto com mais rotas %s:%d:%d\n", 
@@ -114,7 +113,7 @@ void command_P()
 }
 
 void command_Q()
-{ /* prints the airport with most connections */
+{ /* prints airport with most connections */
 	int index = most_connections();
 	
 	printf("Aeroporto com mais ligacoes %s:%d\n", 
@@ -123,7 +122,7 @@ void command_Q()
 }
 
 void command_V()
-{ /* prints out the most popular flight */
+{ /* prints the most popular flight */
 	flight fl; 
 	int count;
 
@@ -136,7 +135,7 @@ void command_V()
 }
 
 void command_C()
-{ /* closes an airport */
+{ /* closes airport */
 	char IDcode[CODE_SIZE];
 	int index;
 	scanf("%s", IDcode);
@@ -148,7 +147,7 @@ void command_C()
 
 
 void command_O()
-{ /* opens an airport */
+{ /* opens airport */
 	char IDcode [CODE_SIZE];
 	int index;
 	scanf("%s", IDcode);
@@ -160,8 +159,8 @@ void command_O()
 
 
 void command_L()
-{ /*prints lists in a way that 
-	depends on scanned input */
+{ /*prints list in function 
+	of the scanned input */
 	int inst;
 	scanf(" %d", &inst);
 	switch(inst)

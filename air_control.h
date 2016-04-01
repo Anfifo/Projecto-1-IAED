@@ -1,3 +1,4 @@
+
 /*
 == = = = = = = = = = = ==
 = /////// tg034 /////// =
@@ -11,7 +12,7 @@
 */
 
 /*
- * NOTE: this code highly relies on using aiport's indexes
+ * NOTE: this code relies highly on using airport's indexes
  * instead of using the structure itself as it is easier
  * and more effecient to throw around indexes, so in all
  * functions related to airports, they handle their index
@@ -35,7 +36,7 @@
 
 
 
-/* -- Macro Functions --	
+/* -- macro functions --	
  * 
  * we decided to use some macro functions to avoid repeating code,
  * to make	it more understandable and add more abstraction.
@@ -46,7 +47,7 @@
 
 #define AIRPORT_FLIGHT_COUNT(A) (airport_flight_count_out(A) \
  								+ airport_flight_count_in(A))
-/* counts all the flights incoming and outgoing of airport of index A*/
+/* counts index's A outgoing and incoming flights */
 
 #define AIRPORT_CLOSED(A) (airports[A].state == CLOSED)
 /* int A => int / returns 1 if airport is closed */
@@ -82,7 +83,7 @@ typedef struct
 	int out;
 	int in;
 }flight;
-/* this structure helps keep a layer of abstraction and allows 
+/* this structure helps keeping a layer of abstraction and allows 
  * functions to return 2 indexes without having to rely on arrays*/
 
 
@@ -96,26 +97,26 @@ typedef struct
  * their actual value on the .c file
  *
  * while we know it's best not to use global variables, 
- * it was sugested that we did for this project
+ * it was sugested that we could in this project
  */
 
 extern airport airports[MAX_AIRPORTS];
 /* vector with all defined and undefined airports */
 
 extern int airSpace[MAX_AIRPORTS][MAX_AIRPORTS];
-/* Matrix that defines the airSpace, where the coordinates are 
- * [outgoing airport's index] [incoming airport's index] and the
- * value it contains is the number of flights from [out] to [in]
+/* matrix that defines the airSpace, where the coordinates 
+ * are [outgoing airport's index] [incoming airport's index] and 
+ * the value it contains is the number of flights from [out] to [in]
  */
 
 extern int nr_of_airports;
-/* is updated everytime a new airport is added limited by MAX_AIRPORTS*/
+/* is updated everytime a new airport is added. limited by MAX_AIRPORTS */
 
 extern int total_flight_count;
-/* contains all the flights in airSpace, is update whenever a flight is added */
+/* contains all the flights in airSpace, it's updated whenever a flight is added */
 
 extern int max_airport_capacity;
-/* contains and is updated with the max capacity given to an airport*/
+/* contains and it's updated with the max capacity given to an airport */
 
 
 
@@ -137,7 +138,7 @@ int IDcode_to_index(char IDcode[]);
 
 flight IDcodes_to_flight(char IDcode1[], char IDcode2[]);
 /*
- * finds the indexes of the 2 airport IDcodes and creates it's flight.
+ * finds the indexes of the 2 airports IDcodes and creates it's flight.
  * :: argmts: char[], char[] -- 2 airport IDcodes
  * :: return: flight -- from IDcode1's aiport to IDcode2's airport
  */
@@ -149,7 +150,7 @@ flight IDcodes_to_flight(char IDcode1[], char IDcode2[]);
 
 flight create_flight (int out, int in);
 /*
- * creates a flight type from  int out to int in 
+ * creates a flight type from out to in 
  * :: argmts: int, int -- 2 airport indexes
  * :: return: flight -- from out's airport to in's airport
  */
@@ -163,7 +164,7 @@ flight create_flight (int out, int in);
 /* MODIFIERS */
 int add_airport(char IDcode[], int capacity);
 /*
- * modifies airports global vector to adds airport with given IDcode and 
+ * modifies airports global vector by adding airport with given IDcode and 
  * capacity, adds 1 to the global counter of airports
  * :: argmts: char [], int -- airport's IDcode and capacity
  * :: return: int -- SUCESS if added else, ERROR
@@ -178,7 +179,7 @@ int modify_capacity(int index, int change);
 
 int close_airport(int index);
 /*
- * changes aiport's state to CLOSED and removes all inc and outg flights
+ * changes airport's state to CLOSED and removes all flights
  * :: argmts: int -- airport's index
  * :: return: int -- SUCCESS if change happen else, ERROR
  */
@@ -208,21 +209,23 @@ void initialize_airSpace();
 
 int add_flight(flight fl);
 /*
- * modifies airpSpace to adds flight, increases by 1 the global flight counter
+ * modifies airpSpace by adding outgoing flight, 
+ * increases by 1 the global flight counter
  * :: argmts: flight -- to be added to airSpace
  * :: return: int -- SUCESS/ERROR
  */
 
 int remove_flight(flight fl);
 /*
- * modifies airSpace to remove flight, decreases by 1 the global flight counter
+ * modifies airSpace by removing outgoing flight, 
+ * decreases by 1 the global flight counter
  * :: argmts: flight -- to be removed from airSpace
  * :: return: int -- SUCCESS/ERROR
  */
 
 int add_round_trip(flight fl);
 /*
- * modifies airSpace to add 2 flights one going and another coming back,
+ * modifies airSpace by adding 2 flights, outgoing and incoming
  * increases by 2 the global flight counter
  * :: argmts: flight -- to be added to airSpace
  * :: return: int -- SUCCESS/ERROR
@@ -230,7 +233,7 @@ int add_round_trip(flight fl);
 
 int remove_round_trip(flight fl);
 /*
- * modifies airSpace to remove 2 flights one going and another coming back,
+ * modifies airSpace by removing 2 flights, outgoing and incoming
  * decreases by 2 the global flight counter
  * :: argmts: flight -- to be removed from airSpace
  * :: return: int -- SUCESS/ERROR
@@ -240,7 +243,7 @@ int remove_round_trip(flight fl);
 /* SELECTORS */
 int flight_count(flight fl);
 /*
- * accesses airSpace to see the sum of flights fl in the airspace (same inc-out)
+ * accesses airSpace to see the sum of flights fl in the airspace (same in-out)
  * :: argmts: flight --
  * :: return: int -- number of flights fl(with same departure-destination)
  */
@@ -253,7 +256,7 @@ int flight_count(flight fl);
 /* -- General --*/
 int airport_flight_count_out(int index);
 /*
- * finds and sums all the outgoing flights from airport
+ * finds and sums all outgoing flights from airport
  * :: argmts: index -- aiport's index
  * :: return: int -- sum of all outgoing flights or error if undefined airport
  */
@@ -274,7 +277,7 @@ int airport_connection_count(int index);
 
 int most_flights();
 /*
- * finds the airport with the highest number of flights (incoming+outgoing)
+ * finds the airport with the highest number of flights (in+out)
  * :: argmts: --
  * :: return: int -- the index of the airport with highest nr of flights 
  */
@@ -300,7 +303,8 @@ flight most_popular_flight();
 /* -- OUTPUT --*/
 void print_index_order();
 /*
- * prints airport's IDcode capacity and flight counts (in & out) by index order
+ * prints airport's IDcode capacity 
+ * and flight counts (in & out) by index's order
  * :: argmts: --
  * :: return: --
  */
@@ -308,7 +312,7 @@ void print_index_order();
 void sort_alphabetical(int array[]);
 /*
  * sorts the airport's IDcodes alphabetically
- * modifies array to have the now sorted airport's indexes
+ * modifies array to have sorted airport's indexes
  * :: argmts: --
  * :: return: --
  */
