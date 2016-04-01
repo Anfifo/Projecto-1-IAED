@@ -1,4 +1,3 @@
-
 /*
 == = = = = = = = = = = ==
 = /////// tg034 /////// =
@@ -36,7 +35,7 @@
 
 
 
-/* -- macro functions --	
+/* -- Macro Functions --	
  * 
  * we decided to use some macro functions to avoid repeating code,
  * to make	it more understandable and add more abstraction.
@@ -104,9 +103,9 @@ extern airport airports[MAX_AIRPORTS];
 /* vector with all defined and undefined airports */
 
 extern int airSpace[MAX_AIRPORTS][MAX_AIRPORTS];
-/* Matrix that defines the airSpace, where the coordinates 
- * are [outgoing airport's index] [incoming airport's index] and 
- * the value it contains is the number of flights from [out] to [in]
+/* Matrix that defines the airSpace, where the coordinates are 
+ * [outgoing airport's index] [incoming airport's index] and the
+ * value it contains is the number of flights from [out] to [in]
  */
 
 extern int nr_of_airports;

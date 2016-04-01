@@ -14,17 +14,12 @@
 #include "air_control.h"
 
 
-
-
 /* -- global variables -- */
 airport airports[MAX_AIRPORTS];
 int airSpace[MAX_AIRPORTS][MAX_AIRPORTS];
 int nr_of_airports = 0;
 int total_flight_count = 0;
 int max_airport_capacity = 0;
-
-
-
 
 
 
