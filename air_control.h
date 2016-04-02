@@ -18,7 +18,7 @@
  * functions related to airports, they handle their index
  *
  *
- * this header contains all the headers and functions 
+ * this header contains all the headers and prototypes 
  * that access manage or change the airSpace 
  */  
 

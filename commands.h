@@ -105,10 +105,3 @@ void command_L();
  * 0: index order -- 1: alphabetical order -- 2: histogram
  * :: input: int -- 0 <= instruction <= 2
  */
-void menu();
-/*
- * calls a command execute based on the character received from input
- * shutdowns program if character = 'X'
- * ignores unknown commands
- * :: input: char -- known commands: A, I, F, G, R, S, N , P, Q, V, C, O, L, X
- */

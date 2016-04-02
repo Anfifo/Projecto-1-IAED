@@ -35,7 +35,7 @@ int max_airport_capacity = 0;
 
 int IDcode_to_index(char IDcode[])
 { /* returns the index of an airport
-	based on its IDcode/id */
+	based on its IDcode*/
 	int i;
 	for (i = 0; i < nr_of_airports; i++)
 		if ((airports[i].index != ERROR) &&
