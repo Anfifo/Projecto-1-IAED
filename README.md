@@ -23,3 +23,4 @@ Andre keeps working. I don't get it. more and more files keep appearing. i don't
 
 01/04/2016
 Isabel is having tons of fun at dia da defesa nacional and im just here splitting the program files woot woot
+We finished ittttt yessss we rock o/
